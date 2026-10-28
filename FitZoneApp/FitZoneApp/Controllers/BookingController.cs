@@ -23,7 +23,7 @@ public class BookingController
         throw new NotImplementedException();
     }
 
-    public Booking BookClass(int memberNo, string classId)
+    public Booking BookClass(string memberNo, string classId)
     {
         throw new NotImplementedException();
     }

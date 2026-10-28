@@ -18,12 +18,12 @@ public class BookingRepo
         throw new NotImplementedException();
     }
 
-    public bool Exists(int memberNo, string classId)
+    public bool Exists(string memberNo, string classId)
     {
         throw new NotImplementedException();
     }
 
-    public void Add(Booking b)
+    public Booking Add(Booking b)
     {
         throw new NotImplementedException();
     }

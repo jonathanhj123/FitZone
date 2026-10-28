@@ -92,7 +92,7 @@ flowchart LR
 classDiagram
     direction LR
     class Member {
-        +int MemberNo
+        +string MemberNo
         +string Name
         +string MembershipStatus
     }
@@ -104,7 +104,7 @@ classDiagram
     }
     class Booking {
         +string BookingId
-        +int MemberNo
+        +string MemberNo
         +string ClassId
         +DateTime BookingTime
     }
@@ -119,7 +119,7 @@ classDiagram
 
 ```csharp
 List<FitnessClass> GetUpcomingClasses();
-Booking BookClass(int memberNo, string classId);
+Booking BookClass(string memberNo, string classId);
 ```
 </details>
 
@@ -128,7 +128,7 @@ Booking BookClass(int memberNo, string classId);
 
 ```csharp
 // MemberRepo
-Member?  GetByMemberNo(int memberNo);
+Member?  GetByMemberNo(string memberNo);
 
 // FitnessClassRepo
 List<FitnessClass> GetUpcoming(DateTime now);
@@ -136,8 +136,8 @@ FitnessClass?      GetById(string classId);
 
 // BookingRepo
 int  CountByClassId(string classId);
-bool Exists(int memberNo, string classId);
-void Add(Booking b);
+bool Exists(string memberNo, string classId);
+Booking Add(Booking b);
 ```
 </details>
 
@@ -146,10 +146,10 @@ void Add(Booking b);
 
 ```csharp
 void Run();                              // entry point called from Program.cs
-void ShowUpcomingClasses();
-void BookClass(int memberNo, string classId);
-private void ShowConfirmation(Booking b);
-private void ShowError(string message);
+List<FitnessClass> ShowUpcomingClasses();
+Booking BookClass(string memberNo, string classId);
+private string ShowConfirmation(Booking b);
+private string ShowError(string message);
 ```
 </details>
 

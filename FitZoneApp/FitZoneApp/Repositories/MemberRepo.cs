@@ -13,7 +13,7 @@ public class MemberRepo
         members = database.GetCollection<Member>("members");
     }
 
-    public Member? GetByMemberNo(int memberNo)
+    public Member? GetByMemberNo(string memberNo)
     {
         throw new NotImplementedException();
     }
