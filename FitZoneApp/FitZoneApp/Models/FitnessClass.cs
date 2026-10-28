@@ -6,7 +6,7 @@ public class FitnessClass
     public string Name { get; set; }
     public DateTime StartTime { get; set; }
     public int Capacity { get; set; }
-    
-    
+
+
 
 }
