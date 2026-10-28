@@ -1,5 +1,5 @@
 ﻿namespace FitZoneAPP;
 
-public class project
+public class Program
 {
 }   
