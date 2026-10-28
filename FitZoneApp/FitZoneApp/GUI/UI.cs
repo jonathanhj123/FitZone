@@ -1,4 +1,5 @@
-﻿using FitZoneApp.Controllers;
+﻿using System;
+using FitZoneApp.Controllers;
 using FitZoneApp.Models;
 
 namespace FitZoneApp.GUI;

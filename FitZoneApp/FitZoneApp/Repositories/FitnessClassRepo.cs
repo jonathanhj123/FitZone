@@ -1,4 +1,6 @@
-﻿using FitZoneApp.Models;
+﻿using System;
+using System.Collections.Generic;
+using FitZoneApp.Models;
 using MongoDB.Driver;
 
 namespace FitZoneApp.Repositories;

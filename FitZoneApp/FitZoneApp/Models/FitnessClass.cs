@@ -1,4 +1,6 @@
-﻿namespace FitZoneApp.Models;
+﻿using System;
+
+namespace FitZoneApp.Models;
 
 public class FitnessClass
 {
