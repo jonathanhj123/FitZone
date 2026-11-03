@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using FitZoneApp.Interfaces;
 using FitZoneApp.Models;
-using FitZoneApp.Repositories;
-
 namespace FitZoneApp.Controllers;
 
 public class BookingController
 {
-    private readonly MemberRepo memberRepo;
-    private readonly FitnessClassRepo classRepo;
-    private readonly BookingRepo bookingRepo;
+    private readonly IMemberRepo memberRepo;
+    private readonly IFitnessRepo classRepo;
+    private readonly IBookingRepo bookingRepo;
 
-    public BookingController(MemberRepo memberRepo, FitnessClassRepo classRepo, BookingRepo bookingRepo)
+    public BookingController(IMemberRepo memberRepo, IFitnessRepo classRepo, IBookingRepo bookingRepo)
     {
         this.memberRepo = memberRepo;
         this.classRepo = classRepo;
