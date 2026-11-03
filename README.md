@@ -190,14 +190,14 @@ Booking BookClass(string memberNo, string classId);   // throws BookingException
 <summary><b>Repository interfaces</b></summary>
 
 ```csharp
-// IMemberRepo     (implemented by MemberRepo)
+// IMemberRepo     (implemented by MemberRepo, InMemoryMemberRepo)
 Member? GetByMemberNo(string memberNo);
 
-// IFitnessRepo    (implemented by FitnessClassRepo)
+// IFitnessRepo    (implemented by FitnessClassRepo, InMemoryFitnessClassRepo)
 List<FitnessClass> GetUpcoming(DateTime now);
 FitnessClass?      GetById(string classId);
 
-// IBookingRepo    (implemented by BookingRepo)
+// IBookingRepo    (implemented by BookingRepo, InMemoryBookingRepo)
 void Add(Booking b);
 bool Exists(string memberNo, string classId);
 int  CountByClassId(string classId);
@@ -223,7 +223,8 @@ private void ShowError(string message);      // red ✖ message
 ### Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [MongoDB](https://www.mongodb.com/try/download/community) running on `mongodb://localhost:27017`
+- A MongoDB database: [MongoDB Atlas](https://www.mongodb.com/atlas) or a [local install](https://www.mongodb.com/try/download/community).
+  Not needed if you run with the in-memory database (see [Configuration](#configuration)).
 
 ### Build
 
@@ -242,10 +243,53 @@ dotnet run --project FitZoneApp
 The app shows a menu where you can view upcoming classes (option 1) or book a class (option 2).
 
 > [!IMPORTANT]
-> There is no seed script yet, so the `FitzoneDB` database must already contain documents in the `members` and `fitnessClasses`
+> In Mongo mode there is no seed script yet, so the `FitzoneDB` database must already contain documents in the `members` and `fitnessClasses`
 > collections (see [How the models map to MongoDB](#how-the-models-map-to-mongodb) for the expected shape).
+> The in-memory database comes with its own sample data.
 
-The database name (`FitzoneDB`) and connection string are set in [`Program.cs`](FitZoneApp/FitZoneApp/Program.cs).
+### Configuration
+
+Settings are read from [`appsettings.json`](FitZoneApp/FitZoneApp/appsettings.json),
+which is copied next to the executable on build:
+
+```json
+{
+  "ConnectionStrings": {
+    "FitzoneDB": "mongodb://localhost:27017"
+  },
+  "Database": {
+    "Provider": "Mongo",
+    "Name": "FitzoneDB"
+  }
+}
+```
+
+| Setting | Values | Meaning |
+| --- | --- | --- |
+| `Database:Provider` | `Mongo` (default) or `InMemory` | Which set of repositories `Program.cs` creates |
+| `ConnectionStrings:FitzoneDB` | MongoDB connection string | Only used in `Mongo` mode |
+| `Database:Name` | Database name | Only used in `Mongo` mode |
+
+If a required value is missing, the app stops at startup with a message saying which one.
+
+### In-memory database
+
+With `"Provider": "InMemory"` the app uses `InMemoryMemberRepo`, `InMemoryFitnessClassRepo` and `InMemoryBookingRepo`,
+which keep their data in lists instead of MongoDB. No database is needed, and everything resets when the app closes.
+They implement the same interfaces as the Mongo repositories, so the controller and UI work unchanged.
+
+The sample data is chosen so every booking rule can be tried out:
+
+| Try booking | Member | Class | Result |
+| --- | --- | --- | --- |
+| A normal booking | `M1002` | `C203` | ✔ Confirmed |
+| The same booking again | `M1002` | `C203` | ✖ Already booked |
+| An inactive member | `M1003` | any | ✖ Membership not active |
+| A class that has started | any active | `C201` | ✖ Already started |
+| A full class | `M1002`, then `M1004` | `C202` | ✔ then ✖ Full (2 spots, 1 taken by `M1001` from the start) |
+| An unknown member | `M9999` | any | ✖ No member with that number |
+
+Class start times are set relative to today, so `C202`–`C205` are always upcoming.
 
 ---
 
@@ -268,10 +312,15 @@ FitZone/
         │   └── IBookingRepo.cs
         ├── Exceptions/
         │   └── BookingException.cs     # booking rule violations
+        ├── appsettings.json            # database provider and connection settings
         ├── Repositories/
-        │   ├── MemberRepo.cs           # data access layer
+        │   ├── MemberRepo.cs           # data access layer (MongoDB)
         │   ├── FitnessClassRepo.cs
-        │   └── BookingRepo.cs
+        │   ├── BookingRepo.cs
+        │   └── InMemory/
+        │       ├── InMemoryMemberRepo.cs        # data access layer (in-memory, with sample data)
+        │       ├── InMemoryFitnessClassRepo.cs
+        │       └── InMemoryBookingRepo.cs
         └── Models/
             ├── Member.cs               # entities
             ├── FitnessClass.cs
@@ -285,7 +334,8 @@ FitZone/
 | | |
 | --- | --- |
 | Language | C# on .NET 10 (nullable reference types enabled) |
-| Database | MongoDB via `MongoDB.Driver` 3.13 |
+| Database | MongoDB via `MongoDB.Driver` 3.13, or an in-memory database |
+| Configuration | `appsettings.json` via `Microsoft.Extensions.Configuration.Json` |
 | Interface | Console application |
 
 ---
@@ -300,5 +350,7 @@ FitZone/
 - [x] Booking rules in `BookingController.BookClass`
 - [x] Console menu in `UI.Run`
 - [x] Error handling with `BookingException`
-- [ ] Seed data for members and classes
+- [x] Settings in `appsettings.json`
+- [x] In-memory database with sample data
+- [ ] Seed data for the MongoDB database
 - [ ] Tests
