@@ -4,7 +4,7 @@ using FitZoneApp.Repositories;
 using MongoDB.Driver;
 
 // 1. Connect to the database
-var client = new MongoClient("mongodb://localhost:27017");
+var client = new MongoClient("mongodb+srv://jona246_db_user:Mongo123@cluster0.nvbn34a.mongodb.net/");
 var database = client.GetDatabase("FitzoneDB");
 
 // 2. Create the repositories (data access layer)
