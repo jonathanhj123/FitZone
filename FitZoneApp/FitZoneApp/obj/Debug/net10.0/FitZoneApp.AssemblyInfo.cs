@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitZoneApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2aad678f5c6ef30bd0ef0bd7a9e398f24dd04bd2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a27005a1d27c4632b3889acc1f795dd0864c52cf")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitZoneApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitZoneApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

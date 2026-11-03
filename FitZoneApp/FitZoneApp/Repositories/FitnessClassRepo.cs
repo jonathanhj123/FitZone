@@ -17,11 +17,11 @@ public class FitnessClassRepo : IFitnessRepo
 
     public List<FitnessClass> GetUpcoming(DateTime now)
     {
-        throw new NotImplementedException();
+        return classes.Find(x => x.StartTime > now).SortBy(x=>x.StartTime).ToList();
     }
 
     public FitnessClass? GetById(string classId)
     {
-        throw new NotImplementedException();
+        return classes.Find(x => x.ClassId == classId).FirstOrDefault();
     }
 }
