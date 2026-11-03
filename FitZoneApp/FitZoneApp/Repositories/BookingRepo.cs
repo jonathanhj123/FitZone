@@ -1,4 +1,5 @@
 ﻿using System;
+using FitZoneApp.Exceptions;
 using FitZoneApp.Interfaces;
 using FitZoneApp.Models;
 using MongoDB.Driver;
@@ -16,16 +17,25 @@ public class BookingRepo : IBookingRepo
 
     public int CountByClassId(string classId)
     {
-        throw new NotImplementedException();
+        return (int)bookings.CountDocuments(x => x.ClassId == classId);
     }
 
     public bool Exists(string memberNo, string classId)
     {
-        throw new NotImplementedException();
+        return bookings.CountDocuments(x => x.MemberNo == memberNo && x.ClassId == classId) > 0;
     }
 
-    public Booking Add(Booking b)
+    public void Add(Booking b)
     {
-        throw new NotImplementedException();
+        try
+        {
+            // InsertOne (not InsertOneAsync) waits for the insert, so a failure throws here
+            bookings.InsertOne(b);
+        }
+        catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+        {
+            // Same _id already exists, i.e. this member already booked this class
+            throw new BookingException($"Member {b.MemberNo} has already booked class {b.ClassId}.");
+        }
     }
 }

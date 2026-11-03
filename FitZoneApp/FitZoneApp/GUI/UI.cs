@@ -1,6 +1,8 @@
 ﻿using System;
 using FitZoneApp.Controllers;
+using FitZoneApp.Exceptions;
 using FitZoneApp.Models;
+using MongoDB.Driver;
 
 namespace FitZoneApp.GUI;
 
@@ -80,23 +82,61 @@ public class UI
         }
     }
 
-    public List<FitnessClass> ShowUpcomingClasses()
+    public void ShowUpcomingClasses()
     {
-        throw new NotImplementedException();
+        List<FitnessClass> classes;
+        try
+        {
+            classes = controller.GetUpcomingClasses();
+        }
+        catch (Exception ex) when (ex is MongoException || ex is TimeoutException)
+        {
+            ShowError("Could not reach the database. Please try again later.");
+            return;
+        }
+
+        if (classes.Count == 0)
+        {
+            Console.WriteLine("  No upcoming classes.");
+            return;
+        }
+
+        foreach (FitnessClass c in classes)
+        {
+            Console.WriteLine($"  [{c.ClassId}] {c.Title} -{c.StartTime:yyyy-MM-dd HH:mm} (capacity {c.Capacity})");
+        }
     }
 
-    public Booking BookClass(string memberNo, string classId)
+    public void BookClass(string memberNo, string classId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Booking booking = controller.BookClass(memberNo, classId);
+            ShowConfirmation(booking);
+        }
+        catch (BookingException ex)
+        {
+            // A booking rule was broken: the message is written for the user
+            ShowError(ex.Message);
+        }
+        catch (Exception ex) when (ex is MongoException || ex is TimeoutException)
+        {
+            // Database is down or unreachable
+            ShowError("Could not reach the database. Please try again later.");
+        }
     }
 
-    private string ShowConfirmation(Booking b)
+    private void ShowConfirmation(Booking b)
     {
-        throw new NotImplementedException();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"  ✔ Booking confirmed: member {b.MemberNo} is booked on class {b.ClassId} (booking id {b.BookingId}).");
+        Console.ResetColor();
     }
 
-    private string ShowError(string message)
+    private void ShowError(string message)
     {
-        throw new NotImplementedException();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"  ✖ {message}");
+        Console.ResetColor();
     }
 }

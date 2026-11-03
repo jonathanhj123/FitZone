@@ -8,13 +8,16 @@ public class Booking
     public string BookingId { get; set; }
     public string MemberNo { get; set; }
     public string ClassId { get; set; }
-    public DateTime BookingTime { get; set; }
+    public DateTime BookedAt { get; set; }
 
     // Parameterless constructor for the MongoDB deserializer
     public Booking() { }
 
-    public Booking(string memberNo, string classId, DateTime bookingTime)
+    public Booking(string memberNo, string classId, DateTime bookedAt)
     {
-        throw new NotImplementedException();
+        this.BookingId = $"{memberNo}-{classId}";
+        this.MemberNo = memberNo;
+        this.ClassId = classId;
+        this.BookedAt = bookedAt;
     }
 }
