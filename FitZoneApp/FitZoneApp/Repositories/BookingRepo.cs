@@ -1,10 +1,11 @@
 ﻿using System;
+using FitZoneApp.Interfaces;
 using FitZoneApp.Models;
 using MongoDB.Driver;
 
 namespace FitZoneApp.Repositories;
 
-public class BookingRepo
+public class BookingRepo : IBookingRepo
 {
     private readonly IMongoCollection<Booking> bookings;
 

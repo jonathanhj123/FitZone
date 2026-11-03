@@ -4,5 +4,8 @@ namespace FitZoneApp.Interfaces;
 
 public interface IBookingRepo
 {
-    Member? GetByMemberNo(string memberNo);
+
+    Booking Add(Booking b);
+    bool Exists(string memberNo, string classId);
+    int CountByClassId(string classId);
 }

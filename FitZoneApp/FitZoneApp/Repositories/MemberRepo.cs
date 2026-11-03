@@ -1,10 +1,11 @@
 ﻿using System;
+using FitZoneApp.Interfaces;
 using FitZoneApp.Models;
 using MongoDB.Driver;
 
 namespace FitZoneApp.Repositories;
 
-public class MemberRepo
+public class MemberRepo : IMemberRepo
 {
     private readonly IMongoCollection<Member> members;
 
