@@ -16,6 +16,6 @@ public class MemberRepo : IMemberRepo
 
     public Member? GetByMemberNo(string memberNo)
     {
-        throw new NotImplementedException();
+       return members.Find(x => x.MemberNo == memberNo).FirstOrDefault();
     }
 }
